@@ -1,7 +1,7 @@
 "use client";
 
 import { DiscountBagde } from "@/app/_components/discount-badge";
-import { ProductItem } from "@/app/_components/product-item";
+import { ProductList } from "@/app/_components/product-list";
 import { Button } from "@/app/_components/ui/button";
 import { Card } from "@/app/_components/ui/card";
 import { calculatePrice, formatCurrency } from "@/app/_helpers/price";
@@ -19,6 +19,11 @@ interface ProductDetailsProps {
   product: Prisma.ProductGetPayload<{
     include: {
       restaurant: true;
+      category: {
+        select: {
+          name: true;
+        };
+      };
     };
   }>;
   complementaryProducts: Prisma.ProductGetPayload<{
@@ -39,8 +44,8 @@ export const ProductDetails = ({
     setQuantity(quantity > 1 ? quantity - 1 : 1);
 
   return (
-    <div className="p-5">
-      <div className="flex items-center gap-[0.375rem]">
+    <div className="py-5">
+      <div className="flex items-center gap-[0.375rem] px-5">
         <div className="relative h-6 w-6">
           <Image
             src={product.restaurant.imageUrl}
@@ -54,9 +59,9 @@ export const ProductDetails = ({
         </span>
       </div>
 
-      <h1 className="mb-2 mt-1 text-xl font-semibold">{product.name}</h1>
+      <h1 className="mb-2 mt-1 px-5 text-xl font-semibold">{product.name}</h1>
 
-      <div className="flex justify-between">
+      <div className="flex justify-between px-5">
         <div>
           <div className="flex items-center gap-2">
             <h2 className="text-xl font-semibold">
@@ -90,47 +95,50 @@ export const ProductDetails = ({
         </div>
       </div>
 
-      <Card className="mt-6 flex justify-around py-3">
-        <div className="flex flex-col items-center">
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <span className="text-xs">Entrega</span>
-            <BikeIcon size={14} />
+      <div className="px-5">
+        <Card className="mt-6 flex justify-around py-3">
+          <div className="flex flex-col items-center">
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <span className="text-xs">Entrega</span>
+              <BikeIcon size={14} />
+            </div>
+
+            {Number(product.restaurant.deliveryFee) > 0 ? (
+              <p className="text-sm font-semibold">
+                {formatCurrency(Number(product.restaurant.deliveryFee))}
+              </p>
+            ) : (
+              <p className="text-sm font-semibold">Grátis</p>
+            )}
           </div>
 
-          {Number(product.restaurant.deliveryFee) > 0 ? (
-            <p className="text-sm font-semibold">
-              {formatCurrency(Number(product.restaurant.deliveryFee))}
-            </p>
-          ) : (
-            <p className="text-sm font-semibold">Grátis</p>
-          )}
-        </div>
+          <div className="flex flex-col items-center">
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <span className="text-xs">Entrega</span>
+              <TimerIcon size={14} />
+            </div>
 
-        <div className="flex flex-col items-center">
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <span className="text-xs">Entrega</span>
-            <TimerIcon size={14} />
+            {Number(product.restaurant.deliveryFee) > 0 ? (
+              <p className="text-sm font-semibold">
+                {formatCurrency(Number(product.restaurant.deliveryFee))}
+              </p>
+            ) : (
+              <p className="text-sm font-semibold">Grátis</p>
+            )}
           </div>
+        </Card>
+      </div>
 
-          {Number(product.restaurant.deliveryFee) > 0 ? (
-            <p className="text-sm font-semibold">
-              {formatCurrency(Number(product.restaurant.deliveryFee))}
-            </p>
-          ) : (
-            <p className="text-sm font-semibold">Grátis</p>
-          )}
-        </div>
-      </Card>
-
-      <div className="mb-3 mt-6 space-y-3">
+      <div className="mb-3 mt-6 space-y-3 px-5">
         <h3 className="font-semibold">Sobre</h3>
         <p className="text-sm text-muted-foreground">{product.description}</p>
       </div>
 
-      <div className="flex gap-4 overflow-x-scroll px-5 [&::-webkit-scrollbar]:hidden">
-        {complementaryProducts.map((product) => (
-          <ProductItem key={product.id} product={product} />
-        ))}
+      <div className="mt-6 space-y-3">
+        <h3 className="px-5 font-semibold">
+          Outros produtos da categoria {product.category.name}
+        </h3>
+        <ProductList products={complementaryProducts} />
       </div>
     </div>
   );

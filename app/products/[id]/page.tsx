@@ -16,17 +16,11 @@ const ProductPage = async ({ params: { id } }: ProductPageProps) => {
     },
     include: {
       restaurant: true,
-    },
-  });
-
-  const juices = await db.product.findMany({
-    where: {
       category: {
-        name: "Sucos",
+        select: {
+          name: true,
+        },
       },
-    },
-    include: {
-      restaurant: true,
     },
   });
 
@@ -34,10 +28,27 @@ const ProductPage = async ({ params: { id } }: ProductPageProps) => {
     return notFound();
   }
 
+  const otherProducts = await db.product.findMany({
+    where: {
+      id: { not: product.id },
+      categoryId: product.categoryId,
+      restaurantId: product.restaurant.id,
+    },
+    include: {
+      restaurant: true,
+      category: {
+        select: {
+          name: true,
+        },
+      },
+    },
+    take: 5,
+  });
+
   return (
     <div>
       <ProductImage product={product} />
-      <ProductDetails product={product} complementaryProducts={juices} />
+      <ProductDetails product={product} complementaryProducts={otherProducts} />
     </div>
   );
 };
