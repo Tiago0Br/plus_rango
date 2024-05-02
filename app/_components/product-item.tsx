@@ -1,7 +1,10 @@
+"use client";
+
 import { Prisma } from "@prisma/client";
 import Image from "next/image";
 import { calculatePrice, formatCurrency } from "../_helpers/price";
-import { ArrowDownIcon } from "lucide-react";
+import Link from "next/link";
+import { DiscountBagde } from "./discount-badge";
 
 interface ProductItemProps {
   product: Prisma.ProductGetPayload<{
@@ -17,43 +20,40 @@ interface ProductItemProps {
 
 export const ProductItem = ({ product }: ProductItemProps) => {
   return (
-    <div className="h-[250px] w-[150px] min-w-[200px] space-y-2">
-      <div className="relative h-[150px] w-full">
-        <Image
-          src={product.imageUrl}
-          alt={product.name}
-          fill
-          className="rounded-lg object-cover shadow-md"
-        />
+    <Link className="w-[150px] min-w-[150px]" href={`/products/${product.id}`}>
+      <div className="h-full space-y-2">
+        <div className="relative h-[150px] w-full">
+          <Image
+            src={product.imageUrl}
+            alt={product.name}
+            fill
+            className="rounded-lg object-cover shadow-md"
+          />
 
-        {product.discountPercentage > 0 && (
-          <div
-            className="absolute left-2 top-2 flex items-center gap-[2px] rounded-full bg-primary 
-            p-1 px-2 py-[2px] text-white"
-          >
-            <ArrowDownIcon size={12} />
-            <span className="text-xs font-semibold">
-              {product.discountPercentage}%
-            </span>
-          </div>
-        )}
-      </div>
-
-      <div>
-        <h2 className="text-sm">{product.name}</h2>
-        <div className="flex items-center gap-1">
-          <h3 className="items-center font-semibold">
-            {formatCurrency(calculatePrice(product))}
-          </h3>
           {product.discountPercentage > 0 && (
-            <span className="text-xs text-muted-foreground line-through">
-              {formatCurrency(+product.price)}
-            </span>
+            <DiscountBagde
+              style={{ position: "absolute", top: 5, left: 5 }}
+              product={product}
+            />
           )}
         </div>
 
-        <span>{product.restaurant.name}</span>
+        <div>
+          <h2 className="text-sm">{product.name}</h2>
+          <div className="flex items-center gap-1">
+            <h3 className="items-center font-semibold">
+              {formatCurrency(calculatePrice(product))}
+            </h3>
+            {product.discountPercentage > 0 && (
+              <span className="text-xs text-muted-foreground line-through">
+                {formatCurrency(+product.price)}
+              </span>
+            )}
+          </div>
+
+          <span>{product.restaurant.name}</span>
+        </div>
       </div>
-    </div>
+    </Link>
   );
 };
