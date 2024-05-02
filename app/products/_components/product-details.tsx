@@ -136,6 +136,10 @@ export const ProductDetails = ({
         </h3>
         <ProductList products={complementaryProducts} />
       </div>
+
+      <div className="px-5 pt-2">
+        <Button className="w-full">Adicionar à sacola</Button>
+      </div>
     </div>
   );
 };
