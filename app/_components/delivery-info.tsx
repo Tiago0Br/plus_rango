@@ -28,7 +28,7 @@ export const DeliveryInfo = ({ restaurant }: DeliveryInfoProps) => {
 
         <div className="flex flex-col items-center">
           <div className="flex items-center gap-2 text-muted-foreground">
-            <span className="text-xs">Entrega</span>
+            <span className="text-xs">Tempo</span>
             <TimerIcon size={14} />
           </div>
 
