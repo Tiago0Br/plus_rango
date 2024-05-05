@@ -33,13 +33,6 @@ export const Cart = () => {
                 <Separator />
 
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-muted-foreground">Total</span>
-                  <span>{formatCurrency(totalPrice)}</span>
-                </div>
-
-                <Separator />
-
-                <div className="flex items-center justify-between text-xs">
                   <span className="text-muted-foreground">Entrega</span>
                   <span>
                     {Number(products[0].restaurant.deliveryFee) > 0 ? (
@@ -55,6 +48,13 @@ export const Cart = () => {
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-muted-foreground">Desconto</span>
                   <span>- {formatCurrency(totalDiscount)}</span>
+                </div>
+
+                <Separator />
+
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-muted-foreground">Total</span>
+                  <span>{formatCurrency(totalPrice)}</span>
                 </div>
 
                 <Separator />
