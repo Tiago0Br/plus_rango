@@ -4,6 +4,16 @@ import { Cart } from "@/app/_components/cart";
 import { DeliveryInfo } from "@/app/_components/delivery-info";
 import { DiscountBagde } from "@/app/_components/discount-badge";
 import { ProductList } from "@/app/_components/product-list";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/app/_components/ui/alert-dialog";
 import { Button } from "@/app/_components/ui/button";
 import {
   Sheet,
@@ -42,11 +52,30 @@ export const ProductDetails = ({
 }: ProductDetailsProps) => {
   const [quantity, setQuantity] = useState(1);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const { addProductToCart } = useContext(CartContext);
+  const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
+  const { addProductToCart, products } = useContext(CartContext);
+
+  const addToCart = () => {
+    addProductToCart({ product, quantity });
+    setIsCartOpen(true);
+  };
+
+  const addAndClearCart = () => {
+    addProductToCart({ product, quantity, cleanCart: true });
+    setIsCartOpen(true);
+  };
 
   const handleAddToCartClick = () => {
-    addProductToCart(product, quantity);
-    setIsCartOpen(true);
+    const hasProductFromOtherRestaurant = products.some(
+      (currentProduct) => currentProduct.restaurantId !== product.restaurantId,
+    );
+
+    if (hasProductFromOtherRestaurant) {
+      setConfirmationDialogOpen(true);
+      return;
+    }
+
+    addToCart();
   };
 
   const handleIncreaseQuantityClick = () =>
@@ -138,6 +167,31 @@ export const ProductDetails = ({
           <Cart />
         </SheetContent>
       </Sheet>
+
+      {confirmationDialogOpen && (
+        <AlertDialog
+          open={confirmationDialogOpen}
+          onOpenChange={setConfirmationDialogOpen}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Esse produto é de outro restaurante
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                Deseja mesmo adicionar esse produto? Isso limpará sua sacola
+                atual.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogAction onClick={addAndClearCart}>
+                Continuar
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
     </>
   );
 };

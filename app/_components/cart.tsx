@@ -15,8 +15,8 @@ export const Cart = () => {
   return (
     <>
       {products.length > 0 ? (
-        <div className="py-5">
-          <div className="space-y-3">
+        <div className="flex h-full flex-col py-5  ">
+          <div className="flex-auto space-y-3">
             {products.map((product) => (
               <CartItem cartProduct={product} key={product.id} />
             ))}

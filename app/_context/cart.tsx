@@ -24,7 +24,15 @@ interface ICartContext {
   subtotalPrice: number;
   totalPrice: number;
   totalDiscount: number;
-  addProductToCart: (product: Product, quantity: number) => void; // eslint-disable-line
+  addProductToCart: ({
+    product, // eslint-disable-line
+    quantity, // eslint-disable-line
+    cleanCart, // eslint-disable-line
+  }: {
+    product: Product;
+    quantity: number;
+    cleanCart?: boolean;
+  }) => void;
   decreaseProductQuantity: (productId: string) => void; // eslint-disable-line
   increaseProductQuantity: (productId: string) => void; // eslint-disable-line
   removeProductFromCart: (productId: string) => void; // eslint-disable-line
@@ -84,10 +92,22 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     );
   };
 
-  const addProductToCart = (product: Product, quantity: number) => {
+  const addProductToCart = ({
+    product,
+    quantity,
+    cleanCart = false,
+  }: {
+    product: Product;
+    quantity: number;
+    cleanCart?: boolean;
+  }) => {
     const isProductAlreadyInCart = products.some(
       (cartProduct) => cartProduct.id === product.id,
     );
+
+    if (cleanCart) {
+      setProducts([]);
+    }
 
     if (isProductAlreadyInCart) {
       setProducts((prev) =>
