@@ -1,16 +1,70 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { CartContext } from "../_context/cart";
 import { CartItem } from "./cart-item";
 import { Card, CardContent } from "./ui/card";
 import { formatCurrency } from "../_helpers/price";
 import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
+import { createOrder } from "../_actions/order";
+import { OrderStatus } from "@prisma/client";
+import { useSession } from "next-auth/react";
+import { Loader2 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "./ui/alert-dialog";
 
 export const Cart = () => {
-  const { products, subtotalPrice, totalPrice, totalDiscount } =
+  const [isLoading, setIsLoading] = useState(false);
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const { products, subtotalPrice, totalPrice, totalDiscount, clearCart } =
     useContext(CartContext);
+
+  const { data } = useSession();
+
+  const handleFinishOrder = async () => {
+    setIsConfirmDialogOpen(false);
+
+    if (!data?.user) return;
+
+    const restaurant = products[0]?.restaurant;
+
+    try {
+      setIsLoading(true);
+      await createOrder({
+        subtotalPrice,
+        totalDiscount,
+        totalPrice,
+        deliveryFee: restaurant.deliveryFee,
+        deliveryTime: restaurant.deliveryTimeMinutes,
+        restaurant: {
+          connect: {
+            id: restaurant.id,
+          },
+        },
+        status: OrderStatus.CONFIRMED,
+        user: {
+          connect: {
+            id: data.user.id!,
+          },
+        },
+      });
+
+      clearCart();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <>
@@ -62,7 +116,14 @@ export const Cart = () => {
             </Card>
           </div>
 
-          <Button className="mt-6 w-full">Finalizar pedido</Button>
+          <Button
+            onClick={() => setIsConfirmDialogOpen(true)}
+            className="mt-6 w-full"
+            disabled={isLoading}
+          >
+            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Finalizar pedido
+          </Button>
         </div>
       ) : (
         <div className="py-5">
@@ -77,6 +138,26 @@ export const Cart = () => {
           </div>
         </div>
       )}
+
+      <AlertDialog open={isConfirmDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Deseja confirmar o pedido?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Seu pedido será preparado pelo restaurante e logo vai chegar ao
+              seu endereço!
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setIsConfirmDialogOpen(false)}>
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={handleFinishOrder}>
+              Confirmar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 };

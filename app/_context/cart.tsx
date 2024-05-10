@@ -9,6 +9,8 @@ interface Product
     include: {
       restaurant: {
         select: {
+          id: true;
+          deliveryTimeMinutes: true;
           deliveryFee: true;
         };
       };
@@ -37,6 +39,7 @@ interface ICartContext {
   decreaseProductQuantity: (productId: string) => void; // eslint-disable-line
   increaseProductQuantity: (productId: string) => void; // eslint-disable-line
   removeProductFromCart: (productId: string) => void; // eslint-disable-line
+  clearCart: () => void;
 }
 
 export const CartContext = createContext<ICartContext>({
@@ -49,6 +52,7 @@ export const CartContext = createContext<ICartContext>({
   decreaseProductQuantity: () => {},
   increaseProductQuantity: () => {},
   removeProductFromCart: () => {},
+  clearCart: () => {},
 });
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
@@ -78,6 +82,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     subtotalPrice -
     totalPrice +
     (Number(products[0]?.restaurant.deliveryFee) || 0);
+
+  const clearCart = () => {
+    setProducts([]);
+  };
 
   const removeProductFromCart = (productId: string) => {
     setProducts((prev) =>
@@ -149,6 +157,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         decreaseProductQuantity,
         increaseProductQuantity,
         removeProductFromCart,
+        clearCart,
       }}
     >
       {children}
