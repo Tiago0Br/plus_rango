@@ -4,7 +4,7 @@ import { useContext, useState } from "react";
 import { CartContext } from "../_context/cart";
 import { CartItem } from "./cart-item";
 import { Card, CardContent } from "./ui/card";
-import { formatCurrency } from "../_helpers/price";
+import { calculatePrice, formatCurrency } from "../_helpers/price";
 import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
 import { createOrder } from "../_actions/order";
@@ -54,6 +54,15 @@ export const Cart = () => {
         user: {
           connect: {
             id: data.user.id!,
+          },
+        },
+        products: {
+          createMany: {
+            data: products.map((product) => ({
+              quantity: product.quantity,
+              productId: product.id,
+              totalPrice: calculatePrice(product),
+            })),
           },
         },
       });
@@ -121,7 +130,6 @@ export const Cart = () => {
             className="mt-6 w-full"
             disabled={isLoading}
           >
-            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Finalizar pedido
           </Button>
         </div>
@@ -153,6 +161,7 @@ export const Cart = () => {
               Cancelar
             </AlertDialogCancel>
             <AlertDialogAction onClick={handleFinishOrder}>
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Confirmar
             </AlertDialogAction>
           </AlertDialogFooter>
