@@ -159,12 +159,12 @@ export const ProductDetails = ({
         </div>
       </div>
 
-      <Sheet open={isCartOpen} onOpenChange={() => setIsCartOpen(false)}>
+      <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
         <SheetContent className="w-[90vw]">
           <SheetHeader>
             <SheetTitle className="text-left">Sacola</SheetTitle>
           </SheetHeader>
-          <Cart />
+          <Cart setIsOpen={setIsCartOpen} />
         </SheetContent>
       </Sheet>
 
