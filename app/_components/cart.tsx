@@ -157,10 +157,13 @@ export const Cart = () => {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setIsConfirmDialogOpen(false)}>
+            <AlertDialogCancel
+              onClick={() => setIsConfirmDialogOpen(false)}
+              disabled={isLoading}
+            >
               Cancelar
             </AlertDialogCancel>
-            <AlertDialogAction onClick={handleFinishOrder}>
+            <AlertDialogAction onClick={handleFinishOrder} disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Confirmar
             </AlertDialogAction>

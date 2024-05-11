@@ -28,9 +28,9 @@ const MyOrdersPage = async () => {
       <Header />
 
       <div className="px-5 py-6">
-        <h2 className="font-semibold">Meus pedidos</h2>
+        <h2 className="pb-6 text-lg font-semibold">Meus pedidos</h2>
 
-        <div className="mt-2 space-y-3">
+        <div className="space-y-3">
           {orders.map((order) => (
             <OrderItem order={order} key={order.id} />
           ))}
