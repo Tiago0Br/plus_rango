@@ -1,9 +1,16 @@
 import { Header } from "@/app/_components/header";
 import { RestaurantItem } from "@/app/_components/restaurant-item";
 import { db } from "@/app/_lib/prisma";
+import { searchUserFavoriteRestaurants } from "../_actions/search";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/_lib/auth";
 
 const RecommendedRestaurants = async () => {
+  const session = await getServerSession(authOptions);
   const restaurants = await db.restaurant.findMany({});
+  const favoriteRestaurants = await searchUserFavoriteRestaurants(
+    session?.user.id,
+  );
 
   return (
     <>
@@ -17,6 +24,7 @@ const RecommendedRestaurants = async () => {
           {restaurants.map((restaurant) => (
             <RestaurantItem
               restaurant={restaurant}
+              userFavoriteRestaurants={favoriteRestaurants}
               key={restaurant.id}
               className="min-w-full max-w-full"
             />

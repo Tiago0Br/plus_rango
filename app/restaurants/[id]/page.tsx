@@ -6,6 +6,9 @@ import { StarIcon } from "lucide-react";
 import { DeliveryInfo } from "@/app/_components/delivery-info";
 import { ProductList } from "@/app/_components/product-list";
 import { CartBanner } from "../_components/cart-banner";
+import { searchUserFavoriteRestaurants } from "../_actions/search";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/_lib/auth";
 
 interface RestaurantPageProps {
   params: {
@@ -14,6 +17,8 @@ interface RestaurantPageProps {
 }
 
 const RestaurantPage = async ({ params: { id } }: RestaurantPageProps) => {
+  const session = await getServerSession(authOptions);
+
   const restaurant = await db.restaurant.findUnique({
     where: {
       id,
@@ -36,6 +41,17 @@ const RestaurantPage = async ({ params: { id } }: RestaurantPageProps) => {
     return notFound();
   }
 
+  const userFavoriteRestaurants = await searchUserFavoriteRestaurants(
+    session?.user.id,
+  );
+  const isFavorite = userFavoriteRestaurants.some(
+    (favorite) => favorite.restaurantId === restaurant.id,
+  );
+
+  if (!restaurant) {
+    return notFound();
+  }
+
   const products = restaurant.products.map((product) => ({
     ...product,
     restaurant,
@@ -43,7 +59,11 @@ const RestaurantPage = async ({ params: { id } }: RestaurantPageProps) => {
 
   return (
     <div>
-      <RestaurantImage restaurant={restaurant} />
+      <RestaurantImage
+        restaurant={restaurant}
+        isFavorite={isFavorite}
+        userId={session?.user.id}
+      />
 
       <div
         className="relative z-50 mt-[-1.5rem] flex items-center justify-between rounded-tl-3xl 

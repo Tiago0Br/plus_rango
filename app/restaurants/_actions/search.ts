@@ -14,3 +14,11 @@ export const searchForRestaurants = async (query: string) => {
 
   return restaurants;
 };
+
+export const searchUserFavoriteRestaurants = async (userId?: string) => {
+  if (!userId) return [];
+
+  return db.userFavoriteRestaurant.findMany({
+    where: { userId },
+  });
+};
