@@ -3,23 +3,18 @@
 import { Restaurant, UserFavoriteRestaurant } from "@prisma/client";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import {
-  searchForRestaurants,
-  searchUserFavoriteRestaurants,
-} from "../_actions/search";
+import { searchForRestaurants } from "../_actions/search";
 import { Header } from "../../_components/header";
 import { RestaurantItem } from "../../_components/restaurant-item";
-import { useSession } from "next-auth/react";
 
-export const Restaurants = () => {
+interface RestaurantsProps {
+  userFavoriteRestaurants: UserFavoriteRestaurant[];
+}
+
+export const Restaurants = ({ userFavoriteRestaurants }: RestaurantsProps) => {
   const searchParams = useSearchParams();
   const searchFor = searchParams.get("search");
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
-  const [userFavoriteRestaurants, setUserFavoriteRestaurants] = useState<
-    UserFavoriteRestaurant[]
-  >([]);
-
-  const session = useSession();
 
   useEffect(() => {
     const fetchRestaurants = async () => {
@@ -27,11 +22,6 @@ export const Restaurants = () => {
 
       const foundRestaurants = await searchForRestaurants(searchFor);
       setRestaurants(foundRestaurants);
-
-      const favoriteRestaurants = await searchUserFavoriteRestaurants(
-        session.data?.user.id,
-      );
-      setUserFavoriteRestaurants(favoriteRestaurants);
     };
 
     fetchRestaurants();
