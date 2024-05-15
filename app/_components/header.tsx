@@ -121,9 +121,12 @@ export const Header = () => {
                 <Button
                   variant="ghost"
                   className="w-full justify-start space-x-3 text-sm font-normal"
+                  asChild
                 >
-                  <HeartIcon size={16} />
-                  <span className="block">Restaurantes favoritos</span>
+                  <Link href="/favorite-restaurants">
+                    <HeartIcon size={16} />
+                    <span className="block">Restaurantes favoritos</span>
+                  </Link>
                 </Button>
               </>
             )}
