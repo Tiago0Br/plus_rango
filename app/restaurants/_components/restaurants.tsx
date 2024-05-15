@@ -35,7 +35,7 @@ export const Restaurants = () => {
     };
 
     fetchRestaurants();
-  }, [searchFor]);
+  }, [searchFor]); // eslint-disable-line
   return (
     <>
       <Header />
@@ -51,7 +51,6 @@ export const Restaurants = () => {
                 <RestaurantItem
                   key={restaurant.id}
                   restaurant={restaurant}
-                  userId={session.data?.user.id}
                   userFavoriteRestaurants={userFavoriteRestaurants}
                   className="min-w-full max-w-full"
                 />

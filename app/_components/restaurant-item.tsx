@@ -12,37 +12,39 @@ import {
   unfavoriteRestaurant,
 } from "../_actions/restaurant";
 import { toast } from "sonner";
+import { useSession } from "next-auth/react";
 
 interface RestaurantItemProps {
   restaurant: Restaurant;
   className?: string;
-  userId?: string;
   userFavoriteRestaurants: UserFavoriteRestaurant[];
 }
 
 export const RestaurantItem = ({
   restaurant,
   className,
-  userId,
   userFavoriteRestaurants,
 }: RestaurantItemProps) => {
+  const { data: session } = useSession();
+
   const isFavorite = userFavoriteRestaurants.some(
     (favorite) => favorite.restaurantId === restaurant.id,
   );
 
   const handleFavorite = async () => {
-    if (!userId) {
+    if (!session?.user.id) {
       toast.error("Por favor, faça login primeiro!");
       return;
     }
+
     try {
       if (isFavorite) {
-        await unfavoriteRestaurant(userId, restaurant.id);
+        await unfavoriteRestaurant(session.user.id, restaurant.id);
         toast.success("Restaurante removido dos favoritos!");
         return;
       }
 
-      await favoriteRestaurant(userId, restaurant.id);
+      await favoriteRestaurant(session.user.id, restaurant.id);
       toast.success("Restaurante adicionado aos favoritos!");
     } catch (error) {
       toast.error("Ocorreu um erro ao favoritar o restaurante!");
