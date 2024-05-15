@@ -19,6 +19,9 @@ const FavoriteRestaurants = async () => {
     include: {
       restaurant: true,
     },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
 
   return (

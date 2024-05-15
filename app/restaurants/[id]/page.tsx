@@ -9,6 +9,7 @@ import { CartBanner } from "../_components/cart-banner";
 import { searchUserFavoriteRestaurants } from "../_actions/search";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/_lib/auth";
+import { isRestaurantFavorited } from "@/app/_helpers/restaurant";
 
 interface RestaurantPageProps {
   params: {
@@ -44,8 +45,9 @@ const RestaurantPage = async ({ params: { id } }: RestaurantPageProps) => {
   const userFavoriteRestaurants = await searchUserFavoriteRestaurants(
     session?.user.id,
   );
-  const isFavorite = userFavoriteRestaurants.some(
-    (favorite) => favorite.restaurantId === restaurant.id,
+  const isFavorite = isRestaurantFavorited(
+    restaurant.id,
+    userFavoriteRestaurants,
   );
 
   if (!restaurant) {
