@@ -1,16 +1,17 @@
-version: "3"
-
 services:
-  postgres:
-    image: postgres:latest
-    container_name: fsw-foods-postgres
+  pg:
+    image: bitnami/postgresql
+    container_name: plus_rango_pg
+    restart: unless-stopped
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      - POSTGRESQL_USERNAME=docker
+      - POSTGRESQL_PASSWORD=docker
+      - POSTGRESQL_DATABASE=plus_rango
     ports:
       - "5432:5432"
     volumes:
-      - ./.postgres-data:/var/lib/postgresql/data
+      - plus_rango_data:/bitnami/postgresql
 
 volumes:
-  .postgres-data:
+  plus_rango_data:
+    driver: local
