@@ -1,45 +1,45 @@
-"use client";
+'use client'
 
-import { Prisma } from "@prisma/client";
-import { ReactNode, createContext, useState } from "react";
-import { calculatePrice } from "../helpers/price";
+import { Prisma } from '@prisma/client'
+import { ReactNode, createContext, useState } from 'react'
+import { calculatePrice } from '../helpers/price'
 
 interface Product
   extends Prisma.ProductGetPayload<{
     include: {
       restaurant: {
         select: {
-          id: true;
-          deliveryTimeMinutes: true;
-          deliveryFee: true;
-        };
-      };
-    };
+          id: true
+          deliveryTimeMinutes: true
+          deliveryFee: true
+        }
+      }
+    }
   }> {}
 
 export interface CartProduct extends Product {
-  quantity: number;
+  quantity: number
 }
 
 interface ICartContext {
-  products: CartProduct[];
-  subtotalPrice: number;
-  totalPrice: number;
-  totalDiscount: number;
-  totalQuantity: number;
-  decreaseProductQuantity: (productId: string) => void; // eslint-disable-line
-  increaseProductQuantity: (productId: string) => void; // eslint-disable-line
-  removeProductFromCart: (productId: string) => void; // eslint-disable-line
-  clearCart: () => void;
+  products: CartProduct[]
+  subtotalPrice: number
+  totalPrice: number
+  totalDiscount: number
+  totalQuantity: number
+  decreaseProductQuantity: (productId: string) => void // eslint-disable-line
+  increaseProductQuantity: (productId: string) => void // eslint-disable-line
+  removeProductFromCart: (productId: string) => void // eslint-disable-line
+  clearCart: () => void
   addProductToCart: ({
     product, // eslint-disable-line
     quantity, // eslint-disable-line
     cleanCart, // eslint-disable-line
   }: {
-    product: Product;
-    quantity: number;
-    cleanCart?: boolean;
-  }) => void;
+    product: Product
+    quantity: number
+    cleanCart?: boolean
+  }) => void
 }
 
 export const CartContext = createContext<ICartContext>({
@@ -53,70 +53,66 @@ export const CartContext = createContext<ICartContext>({
   increaseProductQuantity: () => {},
   removeProductFromCart: () => {},
   clearCart: () => {},
-});
+})
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
-  const [products, setProducts] = useState<CartProduct[]>([]);
+  const [products, setProducts] = useState<CartProduct[]>([])
 
   const subtotalPrice = products.reduce((total, product) => {
-    return total + Number(product.price) * product.quantity;
-  }, 0);
+    return total + Number(product.price) * product.quantity
+  }, 0)
 
   const totalPrice =
     products.reduce((total, product) => {
-      return total + calculatePrice(product) * product.quantity;
-    }, 0) + Number(products[0]?.restaurant.deliveryFee) || 0;
+      return total + calculatePrice(product) * product.quantity
+    }, 0) + Number(products[0]?.restaurant.deliveryFee) || 0
 
   const totalQuantity = products.reduce((total, product) => {
-    return total + product.quantity;
-  }, 0);
+    return total + product.quantity
+  }, 0)
 
   const totalDiscount =
-    subtotalPrice -
-    totalPrice +
-    (Number(products[0]?.restaurant.deliveryFee) || 0);
+    subtotalPrice - totalPrice + (Number(products[0]?.restaurant.deliveryFee) || 0)
 
   const clearCart = () => {
-    setProducts([]);
-  };
+    setProducts([])
+  }
 
   const removeProductFromCart = (productId: string) => {
-    setProducts((prev) =>
-      prev.filter((cartProduct) => cartProduct.id !== productId),
-    );
-  };
+    setProducts((prev) => prev.filter((cartProduct) => cartProduct.id !== productId))
+  }
 
   const decreaseProductQuantity = (productId: string) => {
     setProducts((prev) =>
       prev.map((cartProduct) =>
         cartProduct.id === productId && cartProduct.quantity > 1
           ? { ...cartProduct, quantity: cartProduct.quantity - 1 }
-          : cartProduct,
-      ),
-    );
-  };
+          : cartProduct
+      )
+    )
+  }
 
   const increaseProductQuantity = (productId: string) => {
     setProducts((prev) =>
       prev.map((cartProduct) =>
         cartProduct.id === productId
           ? { ...cartProduct, quantity: cartProduct.quantity + 1 }
-          : cartProduct,
-      ),
-    );
-  };
+          : cartProduct
+      )
+    )
+  }
 
-  const addProductToCart: ICartContext["addProductToCart"] = ({
+  const addProductToCart: ICartContext['addProductToCart'] = ({
     product,
     quantity,
     cleanCart = false,
   }) => {
     const isProductAlreadyInCart = products.some(
-      (cartProduct) => cartProduct.id === product.id,
-    );
+      (cartProduct) => cartProduct.id === product.id
+    )
 
     if (cleanCart) {
-      setProducts([]);
+      setProducts([])
     }
 
     if (isProductAlreadyInCart) {
@@ -124,15 +120,15 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         prev.map((cartProduct) =>
           cartProduct.id === product.id
             ? { ...cartProduct, quantity: cartProduct.quantity + quantity }
-            : cartProduct,
-        ),
-      );
+            : cartProduct
+        )
+      )
 
-      return;
+      return
     }
 
-    setProducts((prev) => [...prev, { ...product, quantity: quantity }]);
-  };
+    setProducts((prev) => [...prev, { ...product, quantity: quantity }])
+  }
 
   return (
     <CartContext.Provider
@@ -151,5 +147,5 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     >
       {children}
     </CartContext.Provider>
-  );
-};
+  )
+}

@@ -1,16 +1,14 @@
-import { getServerSession } from "next-auth";
-import { db } from "@/lib/prisma";
-import { RestaurantItem } from "./restaurant-item";
-import { authOptions } from "@/lib/auth";
-import { searchUserFavoriteRestaurants } from "@/actions/restaurant/search";
+import { getServerSession } from 'next-auth'
+import { db } from '@/lib/prisma'
+import { RestaurantItem } from './restaurant-item'
+import { authOptions } from '@/lib/auth'
+import { searchUserFavoriteRestaurants } from '@/actions/restaurant/search'
 
 export const RestaurantList = async () => {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions)
 
-  const restaurants = await db.restaurant.findMany({ take: 10 });
-  const userFavoriteRestaurants = await searchUserFavoriteRestaurants(
-    session?.user?.id,
-  );
+  const restaurants = await db.restaurant.findMany({ take: 10 })
+  const userFavoriteRestaurants = await searchUserFavoriteRestaurants(session?.user?.id)
 
   return (
     <div className="flex gap-4 overflow-x-scroll px-5 [&::-webkit-scrollbar]:hidden">
@@ -22,5 +20,5 @@ export const RestaurantList = async () => {
         />
       ))}
     </div>
-  );
-};
+  )
+}

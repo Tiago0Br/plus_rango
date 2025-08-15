@@ -1,15 +1,15 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import { notFound } from "next/navigation";
-import { db } from "@/lib/prisma";
-import { Header } from "@/components/header";
-import { RestaurantItem } from "@/components/restaurant-item";
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
+import { notFound } from 'next/navigation'
+import { db } from '@/lib/prisma'
+import { Header } from '@/components/header'
+import { RestaurantItem } from '@/components/restaurant-item'
 
 const FavoriteRestaurants = async () => {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions)
 
   if (!session) {
-    return notFound();
+    return notFound()
   }
 
   const restaurants = await db.userFavoriteRestaurant.findMany({
@@ -20,9 +20,9 @@ const FavoriteRestaurants = async () => {
       restaurant: true,
     },
     orderBy: {
-      createdAt: "desc",
+      createdAt: 'desc',
     },
-  });
+  })
 
   return (
     <>
@@ -41,14 +41,12 @@ const FavoriteRestaurants = async () => {
               />
             ))
           ) : (
-            <h3 className="font-medium">
-              Você ainda não favoritou nenhum restaurante!
-            </h3>
+            <h3 className="font-medium">Você ainda não favoritou nenhum restaurante!</h3>
           )}
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default FavoriteRestaurants;
+export default FavoriteRestaurants

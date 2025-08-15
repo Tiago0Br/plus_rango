@@ -1,10 +1,10 @@
-import { Card } from "@/components/ui/card";
-import { formatCurrency } from "@/helpers/price";
-import { Restaurant } from "@prisma/client";
-import { BikeIcon, TimerIcon } from "lucide-react";
+import { Card } from '@/components/ui/card'
+import { formatCurrency } from '@/helpers/price'
+import { Restaurant } from '@prisma/client'
+import { BikeIcon, TimerIcon } from 'lucide-react'
 
 interface DeliveryInfoProps {
-  restaurant: Pick<Restaurant, "deliveryFee" | "deliveryTimeMinutes">;
+  restaurant: Pick<Restaurant, 'deliveryFee' | 'deliveryTimeMinutes'>
 }
 
 export const DeliveryInfo = ({ restaurant }: DeliveryInfoProps) => {
@@ -32,11 +32,9 @@ export const DeliveryInfo = ({ restaurant }: DeliveryInfoProps) => {
             <TimerIcon size={14} />
           </div>
 
-          <p className="text-sm font-semibold">
-            {restaurant.deliveryTimeMinutes} min
-          </p>
+          <p className="text-sm font-semibold">{restaurant.deliveryTimeMinutes} min</p>
         </div>
       </Card>
     </>
-  );
-};
+  )
+}

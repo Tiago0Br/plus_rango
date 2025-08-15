@@ -1,20 +1,20 @@
-"use client";
+'use client'
 
-import { Restaurant, UserFavoriteRestaurant } from "@prisma/client";
-import { BikeIcon, HeartIcon, StarIcon, TimerIcon } from "lucide-react";
-import Image from "next/image";
-import { formatCurrency } from "../helpers/price";
-import { Button } from "./ui/button";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { useSession } from "next-auth/react";
-import { isRestaurantFavorited } from "../helpers/restaurant";
-import { useToggleFavoriteRestaurant } from "../hooks/use-toggle-favorite-restaurant";
+import { Restaurant, UserFavoriteRestaurant } from '@prisma/client'
+import { BikeIcon, HeartIcon, StarIcon, TimerIcon } from 'lucide-react'
+import Image from 'next/image'
+import { formatCurrency } from '../helpers/price'
+import { Button } from './ui/button'
+import Link from 'next/link'
+import { cn } from '@/lib/utils'
+import { useSession } from 'next-auth/react'
+import { isRestaurantFavorited } from '../helpers/restaurant'
+import { useToggleFavoriteRestaurant } from '../hooks/use-toggle-favorite-restaurant'
 
 interface RestaurantItemProps {
-  restaurant: Restaurant;
-  className?: string;
-  userFavoriteRestaurants: UserFavoriteRestaurant[];
+  restaurant: Restaurant
+  className?: string
+  userFavoriteRestaurants: UserFavoriteRestaurant[]
 }
 
 export const RestaurantItem = ({
@@ -22,21 +22,18 @@ export const RestaurantItem = ({
   className,
   userFavoriteRestaurants,
 }: RestaurantItemProps) => {
-  const { data: session } = useSession();
+  const { data: session } = useSession()
 
-  const isFavorite = isRestaurantFavorited(
-    restaurant.id,
-    userFavoriteRestaurants,
-  );
+  const isFavorite = isRestaurantFavorited(restaurant.id, userFavoriteRestaurants)
 
   const { handleFavoriteClick } = useToggleFavoriteRestaurant({
     userId: session?.user.id,
     restaurantId: restaurant.id,
     isRestaurantFavorited: isFavorite,
-  });
+  })
 
   return (
-    <div className={cn("min-w-[266px] max-w-[266px]", className)}>
+    <div className={cn('min-w-[266px] max-w-[266px]', className)}>
       <div className="w-full space-y-3">
         <div className="relative h-[136px] w-full">
           <Link href={`/restaurants/${restaurant.id}`}>
@@ -58,7 +55,7 @@ export const RestaurantItem = ({
 
           <Button
             size="icon"
-            className={`absolute right-2 top-2 h-7 w-7 rounded-full ${isFavorite ? "bg-primary" : "bg-gray-700"}`}
+            className={`absolute right-2 top-2 h-7 w-7 rounded-full ${isFavorite ? 'bg-primary' : 'bg-gray-700'}`}
             onClick={handleFavoriteClick}
           >
             <HeartIcon size={16} className="fill-white" />
@@ -71,7 +68,7 @@ export const RestaurantItem = ({
             <BikeIcon className="text-primary" size={14} />
             <span className="text-xs text-muted-foreground">
               {Number(restaurant.deliveryFee) === 0
-                ? "Entrega grátis"
+                ? 'Entrega grátis'
                 : formatCurrency(Number(restaurant.deliveryFee))}
             </span>
           </div>
@@ -84,5 +81,5 @@ export const RestaurantItem = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

@@ -1,7 +1,7 @@
-"use client";
+'use client'
 
-import Image from "next/image";
-import { Button } from "./ui/button";
+import Image from 'next/image'
+import { Button } from './ui/button'
 import {
   HeartIcon,
   HomeIcon,
@@ -9,40 +9,29 @@ import {
   LogOutIcon,
   MenuIcon,
   ScrollTextIcon,
-} from "lucide-react";
-import Link from "next/link";
-import { signIn, signOut, useSession } from "next-auth/react";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "./ui/sheet";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Separator } from "./ui/separator";
+} from 'lucide-react'
+import Link from 'next/link'
+import { signIn, signOut, useSession } from 'next-auth/react'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet'
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
+import { Separator } from './ui/separator'
 
 export const Header = () => {
-  const { data, status } = useSession();
+  const { data, status } = useSession()
 
   const handleSignInClick = () => {
-    signIn();
-  };
+    signIn()
+  }
 
   const handleSignOutClick = () => {
-    signOut();
-  };
+    signOut()
+  }
 
   return (
     <div className="flex justify-between px-5 pt-6">
       <div className="relative h-[30px] w-[100px]">
         <Link href="/">
-          <Image
-            src="/logo.png"
-            alt="FWS Foods"
-            fill
-            className="object-contain"
-          />
+          <Image src="/logo.png" alt="FWS Foods" fill className="object-contain" />
         </Link>
       </div>
 
@@ -57,15 +46,14 @@ export const Header = () => {
             <SheetTitle className="text-left">Menu</SheetTitle>
           </SheetHeader>
 
-          {status === "authenticated" && data.user?.name ? (
+          {status === 'authenticated' && data.user?.name ? (
             <div>
               <div className="flex justify-between gap-2">
                 <div className="flex items-center gap-3">
                   <Avatar>
                     <AvatarImage src={data.user.image!} />
                     <AvatarFallback>
-                      {data.user.name.split(" ")[0][0] +
-                        data.user.name.split(" ")[1][0]}
+                      {data.user.name.split(' ')[0][0] + data.user.name.split(' ')[1][0]}
                     </AvatarFallback>
                   </Avatar>
 
@@ -151,5 +139,5 @@ export const Header = () => {
         </SheetContent>
       </Sheet>
     </div>
-  );
-};
+  )
+}

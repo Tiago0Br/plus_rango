@@ -1,22 +1,19 @@
-"use client";
+'use client'
 
-import Image from "next/image";
-import { CartContext, CartProduct } from "../context/cart";
-import { calculatePrice, formatCurrency } from "../helpers/price";
-import { Button } from "./ui/button";
-import { ChevronLeftIcon, ChevronRightIcon, TrashIcon } from "lucide-react";
-import { useContext } from "react";
+import Image from 'next/image'
+import { CartContext, CartProduct } from '../context/cart'
+import { calculatePrice, formatCurrency } from '../helpers/price'
+import { Button } from './ui/button'
+import { ChevronLeftIcon, ChevronRightIcon, TrashIcon } from 'lucide-react'
+import { useContext } from 'react'
 
 interface CartItemProps {
-  cartProduct: CartProduct;
+  cartProduct: CartProduct
 }
 
 export const CartItem = ({ cartProduct }: CartItemProps) => {
-  const {
-    increaseProductQuantity,
-    decreaseProductQuantity,
-    removeProductFromCart,
-  } = useContext(CartContext);
+  const { increaseProductQuantity, decreaseProductQuantity, removeProductFromCart } =
+    useContext(CartContext)
 
   return (
     <div className="flex items-center justify-between">
@@ -72,5 +69,5 @@ export const CartItem = ({ cartProduct }: CartItemProps) => {
         <TrashIcon size={18} />
       </Button>
     </div>
-  );
-};
+  )
+}

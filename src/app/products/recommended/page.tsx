@@ -1,6 +1,6 @@
-import { Header } from "@/components/header";
-import { ProductItem } from "@/components/product-item";
-import { db } from "@/lib/prisma";
+import { Header } from '@/components/header'
+import { ProductItem } from '@/components/product-item'
+import { db } from '@/lib/prisma'
 
 const RecommendedProductsPage = async () => {
   const products = await db.product.findMany({
@@ -17,7 +17,7 @@ const RecommendedProductsPage = async () => {
         },
       },
     },
-  });
+  })
 
   return (
     <>
@@ -27,16 +27,12 @@ const RecommendedProductsPage = async () => {
 
         <div className="grid grid-cols-2 gap-6">
           {products.map((product) => (
-            <ProductItem
-              product={product}
-              key={product.id}
-              className="min-w-full"
-            />
+            <ProductItem product={product} key={product.id} className="min-w-full" />
           ))}
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default RecommendedProductsPage;
+export default RecommendedProductsPage

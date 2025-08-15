@@ -1,13 +1,13 @@
-import { CategoryList } from "@/components/category-list";
-import { Header } from "@/components/header";
-import { Search } from "@/components/search";
-import { ProductList } from "@/components/product-list";
-import { Button } from "@/components/ui/button";
-import { ChevronRightIcon } from "lucide-react";
-import { db } from "@/lib/prisma";
-import { PromoBanner } from "@/components/promo-banner";
-import { RestaurantList } from "@/components/restaurant-list";
-import Link from "next/link";
+import { CategoryList } from '@/components/category-list'
+import { Header } from '@/components/header'
+import { Search } from '@/components/search'
+import { ProductList } from '@/components/product-list'
+import { Button } from '@/components/ui/button'
+import { ChevronRightIcon } from 'lucide-react'
+import { db } from '@/lib/prisma'
+import { PromoBanner } from '@/components/promo-banner'
+import { RestaurantList } from '@/components/restaurant-list'
+import Link from 'next/link'
 
 const Home = async () => {
   const products = await db.product.findMany({
@@ -24,7 +24,7 @@ const Home = async () => {
         },
       },
     },
-  });
+  })
 
   return (
     <>
@@ -80,7 +80,7 @@ const Home = async () => {
         <RestaurantList />
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

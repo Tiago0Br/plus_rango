@@ -1,16 +1,16 @@
-"use client";
+'use client'
 
-import { Button } from "../ui/button";
-import { useToggleFavoriteRestaurant } from "../../hooks/use-toggle-favorite-restaurant";
-import { Restaurant } from "@prisma/client";
-import { ChevronLeftIcon, HeartIcon } from "lucide-react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { Button } from '../ui/button'
+import { useToggleFavoriteRestaurant } from '../../hooks/use-toggle-favorite-restaurant'
+import { Restaurant } from '@prisma/client'
+import { ChevronLeftIcon, HeartIcon } from 'lucide-react'
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 
 interface RestaurantImageProps {
-  restaurant: Pick<Restaurant, "id" | "name" | "imageUrl">;
-  isFavorite: boolean;
-  userId?: string;
+  restaurant: Pick<Restaurant, 'id' | 'name' | 'imageUrl'>
+  isFavorite: boolean
+  userId?: string
 }
 
 export const RestaurantImage = ({
@@ -19,16 +19,16 @@ export const RestaurantImage = ({
   userId,
 }: RestaurantImageProps) => {
   function handleClick() {
-    router.back();
+    router.back()
   }
 
-  const router = useRouter();
+  const router = useRouter()
 
   const { handleFavoriteClick } = useToggleFavoriteRestaurant({
     restaurantId: restaurant.id,
     userId,
     isRestaurantFavorited: isFavorite,
-  });
+  })
 
   return (
     <div className="relative h-[250px] w-full">
@@ -49,11 +49,11 @@ export const RestaurantImage = ({
 
       <Button
         size="icon"
-        className={`absolute right-4 top-4 rounded-full ${isFavorite ? "bg-primary" : "bg-gray-700"}`}
+        className={`absolute right-4 top-4 rounded-full ${isFavorite ? 'bg-primary' : 'bg-gray-700'}`}
         onClick={handleFavoriteClick}
       >
         <HeartIcon size={20} className="fill-white" />
       </Button>
     </div>
-  );
-};
+  )
+}

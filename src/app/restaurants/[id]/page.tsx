@@ -1,24 +1,24 @@
-import { db } from "@/lib/prisma";
-import { notFound } from "next/navigation";
-import { RestaurantImage } from "@/components/restaurants/restaurant-image";
-import Image from "next/image";
-import { StarIcon } from "lucide-react";
-import { DeliveryInfo } from "@/components/delivery-info";
-import { ProductList } from "@/components/product-list";
-import { CartBanner } from "@/components/restaurants/cart-banner";
-import { searchUserFavoriteRestaurants } from "@/actions/restaurant/search";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import { isRestaurantFavorited } from "@/helpers/restaurant";
+import { db } from '@/lib/prisma'
+import { notFound } from 'next/navigation'
+import { RestaurantImage } from '@/components/restaurants/restaurant-image'
+import Image from 'next/image'
+import { StarIcon } from 'lucide-react'
+import { DeliveryInfo } from '@/components/delivery-info'
+import { ProductList } from '@/components/product-list'
+import { CartBanner } from '@/components/restaurants/cart-banner'
+import { searchUserFavoriteRestaurants } from '@/actions/restaurant/search'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
+import { isRestaurantFavorited } from '@/helpers/restaurant'
 
 interface RestaurantPageProps {
   params: {
-    id: string;
-  };
+    id: string
+  }
 }
 
 const RestaurantPage = async ({ params: { id } }: RestaurantPageProps) => {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions)
 
   const restaurant = await db.restaurant.findUnique({
     where: {
@@ -36,28 +36,23 @@ const RestaurantPage = async ({ params: { id } }: RestaurantPageProps) => {
         take: 10,
       },
     },
-  });
+  })
 
   if (!restaurant) {
-    return notFound();
+    return notFound()
   }
 
-  const userFavoriteRestaurants = await searchUserFavoriteRestaurants(
-    session?.user.id,
-  );
-  const isFavorite = isRestaurantFavorited(
-    restaurant.id,
-    userFavoriteRestaurants,
-  );
+  const userFavoriteRestaurants = await searchUserFavoriteRestaurants(session?.user.id)
+  const isFavorite = isRestaurantFavorited(restaurant.id, userFavoriteRestaurants)
 
   if (!restaurant) {
-    return notFound();
+    return notFound()
   }
 
   const products = restaurant.products.map((product) => ({
     ...product,
     restaurant,
-  }));
+  }))
 
   return (
     <div>
@@ -98,9 +93,7 @@ const RestaurantPage = async ({ params: { id } }: RestaurantPageProps) => {
             key={category.id}
             className="min-w-[167px] rounded-lg bg-[#f4f4f4] text-center"
           >
-            <span className="text-xs text-muted-foreground">
-              {category.name}
-            </span>
+            <span className="text-xs text-muted-foreground">{category.name}</span>
           </div>
         ))}
       </div>
@@ -124,7 +117,7 @@ const RestaurantPage = async ({ params: { id } }: RestaurantPageProps) => {
 
       <CartBanner restaurant={restaurant} />
     </div>
-  );
-};
+  )
+}
 
-export default RestaurantPage;
+export default RestaurantPage

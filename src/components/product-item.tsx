@@ -1,29 +1,29 @@
-"use client";
+'use client'
 
-import { Prisma } from "@prisma/client";
-import Image from "next/image";
-import { calculatePrice, formatCurrency } from "../helpers/price";
-import Link from "next/link";
-import { DiscountBagde } from "./discount-badge";
-import { cn } from "../lib/utils";
+import { Prisma } from '@prisma/client'
+import Image from 'next/image'
+import { calculatePrice, formatCurrency } from '../helpers/price'
+import Link from 'next/link'
+import { DiscountBagde } from './discount-badge'
+import { cn } from '../lib/utils'
 
 interface ProductItemProps {
   product: Prisma.ProductGetPayload<{
     include: {
       restaurant: {
         select: {
-          name: true;
-        };
-      };
-    };
-  }>;
-  className?: string;
+          name: true
+        }
+      }
+    }
+  }>
+  className?: string
 }
 
 export const ProductItem = ({ product, className }: ProductItemProps) => {
   return (
     <Link
-      className={cn("w-[150px] min-w-[150px]", className)}
+      className={cn('w-[150px] min-w-[150px]', className)}
       href={`/products/${product.id}`}
     >
       <div className="h-full space-y-2">
@@ -37,7 +37,7 @@ export const ProductItem = ({ product, className }: ProductItemProps) => {
 
           {product.discountPercentage > 0 && (
             <DiscountBagde
-              style={{ position: "absolute", top: 5, left: 5 }}
+              style={{ position: 'absolute', top: 5, left: 5 }}
               product={product}
             />
           )}
@@ -60,5 +60,5 @@ export const ProductItem = ({ product, className }: ProductItemProps) => {
         </div>
       </div>
     </Link>
-  );
-};
+  )
+}

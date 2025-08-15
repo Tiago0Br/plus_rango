@@ -1,16 +1,16 @@
-"use client";
+'use client'
 
-import { useContext, useState } from "react";
-import { CartContext } from "../context/cart";
-import { CartItem } from "./cart-item";
-import { Card, CardContent } from "./ui/card";
-import { calculatePrice, formatCurrency } from "../helpers/price";
-import { Separator } from "./ui/separator";
-import { Button } from "./ui/button";
-import { createOrder } from "../actions/order";
-import { OrderStatus } from "@prisma/client";
-import { useSession } from "next-auth/react";
-import { Loader2 } from "lucide-react";
+import { useContext, useState } from 'react'
+import { CartContext } from '../context/cart'
+import { CartItem } from './cart-item'
+import { Card, CardContent } from './ui/card'
+import { calculatePrice, formatCurrency } from '../helpers/price'
+import { Separator } from './ui/separator'
+import { Button } from './ui/button'
+import { createOrder } from '../actions/order'
+import { OrderStatus } from '@prisma/client'
+import { useSession } from 'next-auth/react'
+import { Loader2 } from 'lucide-react'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,32 +20,32 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "./ui/alert-dialog";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+} from './ui/alert-dialog'
+import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 
 interface CartProps {
-  setIsOpen: (open: boolean) => void; // eslint-disable-line
+  setIsOpen: (open: boolean) => void // eslint-disable-line
 }
 
 export const Cart = ({ setIsOpen }: CartProps) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false)
   const { products, subtotalPrice, totalPrice, totalDiscount, clearCart } =
-    useContext(CartContext);
+    useContext(CartContext)
 
-  const { data } = useSession();
-  const router = useRouter();
+  const { data } = useSession()
+  const router = useRouter()
 
   const handleFinishOrder = async () => {
-    setIsConfirmDialogOpen(false);
+    setIsConfirmDialogOpen(false)
 
-    if (!data?.user) return;
+    if (!data?.user) return
 
-    const restaurant = products[0]?.restaurant;
+    const restaurant = products[0]?.restaurant
 
     try {
-      setIsLoading(true);
+      setIsLoading(true)
       await createOrder({
         subtotalPrice,
         totalDiscount,
@@ -72,26 +72,26 @@ export const Cart = ({ setIsOpen }: CartProps) => {
             })),
           },
         },
-      });
+      })
 
-      clearCart();
-      setIsOpen(false);
+      clearCart()
+      setIsOpen(false)
 
-      toast("Pedido realizado com sucesso!", {
-        description: "Deseja acompanhar seu pedido?",
+      toast('Pedido realizado com sucesso!', {
+        description: 'Deseja acompanhar seu pedido?',
         action: {
-          label: "Ver pedido",
+          label: 'Ver pedido',
           onClick: () => {
-            router.push("/my-orders");
+            router.push('/my-orders')
           },
         },
-      });
+      })
     } catch (error) {
-      console.log(error);
+      console.log(error)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <>
@@ -170,8 +170,8 @@ export const Cart = ({ setIsOpen }: CartProps) => {
           <AlertDialogHeader>
             <AlertDialogTitle>Deseja confirmar o pedido?</AlertDialogTitle>
             <AlertDialogDescription>
-              Seu pedido será preparado pelo restaurante e logo vai chegar ao
-              seu endereço!
+              Seu pedido será preparado pelo restaurante e logo vai chegar ao seu
+              endereço!
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -189,5 +189,5 @@ export const Cart = ({ setIsOpen }: CartProps) => {
         </AlertDialogContent>
       </AlertDialog>
     </>
-  );
-};
+  )
+}

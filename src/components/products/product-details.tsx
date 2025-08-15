@@ -1,9 +1,9 @@
-"use client";
+'use client'
 
-import { Cart } from "../cart";
-import { DeliveryInfo } from "../delivery-info";
-import { DiscountBagde } from "../discount-badge";
-import { ProductList } from "../product-list";
+import { Cart } from '../cart'
+import { DeliveryInfo } from '../delivery-info'
+import { DiscountBagde } from '../discount-badge'
+import { ProductList } from '../product-list'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,75 +13,69 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "../ui/alert-dialog";
-import { Button } from "../ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "../ui/sheet";
-import { CartContext } from "../../context/cart";
-import { calculatePrice, formatCurrency } from "../../helpers/price";
-import { Prisma } from "@prisma/client";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-import Image from "next/image";
-import { useContext, useState } from "react";
+} from '../ui/alert-dialog'
+import { Button } from '../ui/button'
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet'
+import { CartContext } from '../../context/cart'
+import { calculatePrice, formatCurrency } from '../../helpers/price'
+import { Prisma } from '@prisma/client'
+import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
+import Image from 'next/image'
+import { useContext, useState } from 'react'
 
 interface ProductDetailsProps {
   product: Prisma.ProductGetPayload<{
     include: {
-      restaurant: true;
+      restaurant: true
       category: {
         select: {
-          name: true;
-        };
-      };
-    };
-  }>;
+          name: true
+        }
+      }
+    }
+  }>
   complementaryProducts: Prisma.ProductGetPayload<{
     include: {
-      restaurant: true;
-    };
-  }>[];
+      restaurant: true
+    }
+  }>[]
 }
 
 export const ProductDetails = ({
   product,
   complementaryProducts,
 }: ProductDetailsProps) => {
-  const [quantity, setQuantity] = useState(1);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
-  const { addProductToCart, products } = useContext(CartContext);
+  const [quantity, setQuantity] = useState(1)
+  const [isCartOpen, setIsCartOpen] = useState(false)
+  const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
+  const { addProductToCart, products } = useContext(CartContext)
 
   const addToCart = () => {
-    addProductToCart({ product, quantity });
-    setIsCartOpen(true);
-  };
+    addProductToCart({ product, quantity })
+    setIsCartOpen(true)
+  }
 
   const addAndClearCart = () => {
-    addProductToCart({ product, quantity, cleanCart: true });
-    setIsCartOpen(true);
-  };
+    addProductToCart({ product, quantity, cleanCart: true })
+    setIsCartOpen(true)
+  }
 
   const handleAddToCartClick = () => {
     const hasProductFromOtherRestaurant = products.some(
-      (currentProduct) => currentProduct.restaurantId !== product.restaurantId,
-    );
+      (currentProduct) => currentProduct.restaurantId !== product.restaurantId
+    )
 
     if (hasProductFromOtherRestaurant) {
-      setConfirmationDialogOpen(true);
-      return;
+      setConfirmationDialogOpen(true)
+      return
     }
 
-    addToCart();
-  };
+    addToCart()
+  }
 
   const handleIncreaseQuantityClick = () =>
-    setQuantity(quantity < 100 ? quantity + 1 : 100);
-  const handleDecreaseQuantityClick = () =>
-    setQuantity(quantity > 1 ? quantity - 1 : 1);
+    setQuantity(quantity < 100 ? quantity + 1 : 100)
+  const handleDecreaseQuantityClick = () => setQuantity(quantity > 1 ? quantity - 1 : 1)
 
   return (
     <>
@@ -95,9 +89,7 @@ export const ProductDetails = ({
               className="rounded-full object-cover"
             />
           </div>
-          <span className="text-xs text-muted-foreground">
-            {product.restaurant.name}
-          </span>
+          <span className="text-xs text-muted-foreground">{product.restaurant.name}</span>
         </div>
 
         <h1 className="mb-2 mt-1 px-5 text-xl font-semibold">{product.name}</h1>
@@ -108,9 +100,7 @@ export const ProductDetails = ({
               <h2 className="text-xl font-semibold">
                 {formatCurrency(calculatePrice(product))}
               </h2>
-              {product.discountPercentage > 0 && (
-                <DiscountBagde product={product} />
-              )}
+              {product.discountPercentage > 0 && <DiscountBagde product={product} />}
             </div>
 
             {product.discountPercentage && (
@@ -175,23 +165,18 @@ export const ProductDetails = ({
         >
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>
-                Esse produto é de outro restaurante
-              </AlertDialogTitle>
+              <AlertDialogTitle>Esse produto é de outro restaurante</AlertDialogTitle>
               <AlertDialogDescription>
-                Deseja mesmo adicionar esse produto? Isso limpará sua sacola
-                atual.
+                Deseja mesmo adicionar esse produto? Isso limpará sua sacola atual.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              <AlertDialogAction onClick={addAndClearCart}>
-                Continuar
-              </AlertDialogAction>
+              <AlertDialogAction onClick={addAndClearCart}>Continuar</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
       )}
     </>
-  );
-};
+  )
+}

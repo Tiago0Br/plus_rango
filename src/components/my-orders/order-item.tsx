@@ -1,66 +1,66 @@
-"use client";
+'use client'
 
-import { Avatar, AvatarImage } from "../../components/ui/avatar";
-import { Button } from "../../components/ui/button";
-import { Card, CardContent } from "../../components/ui/card";
-import { Separator } from "../../components/ui/separator";
-import { CartContext } from "../../context/cart";
-import { formatCurrency } from "../../helpers/price";
-import { OrderStatus, Prisma } from "@prisma/client";
-import { ChevronRightIcon } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useContext } from "react";
+import { Avatar, AvatarImage } from '../../components/ui/avatar'
+import { Button } from '../../components/ui/button'
+import { Card, CardContent } from '../../components/ui/card'
+import { Separator } from '../../components/ui/separator'
+import { CartContext } from '../../context/cart'
+import { formatCurrency } from '../../helpers/price'
+import { OrderStatus, Prisma } from '@prisma/client'
+import { ChevronRightIcon } from 'lucide-react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useContext } from 'react'
 
 interface OrderItemProps {
   order: Prisma.OrderGetPayload<{
     include: {
-      restaurant: true;
+      restaurant: true
       products: {
         include: {
-          product: true;
-        };
-      };
-    };
-  }>;
+          product: true
+        }
+      }
+    }
+  }>
 }
 
 const getOrderStatusLabel = (status: OrderStatus) => {
   switch (status) {
-    case "CANCELED":
-      return "Cancelado";
-    case "COMPLETED":
-      return "Entregue";
-    case "CONFIRMED":
-      return "Confirmado";
-    case "DELIVERING":
-      return "Em Transporte";
-    case "PREPARING":
-      return "Em preparação";
+    case 'CANCELED':
+      return 'Cancelado'
+    case 'COMPLETED':
+      return 'Entregue'
+    case 'CONFIRMED':
+      return 'Confirmado'
+    case 'DELIVERING':
+      return 'Em Transporte'
+    case 'PREPARING':
+      return 'Em preparação'
   }
-};
+}
 
 export const OrderItem = ({ order }: OrderItemProps) => {
-  const { addProductToCart } = useContext(CartContext);
-  const router = useRouter();
+  const { addProductToCart } = useContext(CartContext)
+  const router = useRouter()
 
   const handleRedoOrder = () => {
     for (const orderProduct of order.products) {
       addProductToCart({
         product: { ...orderProduct.product, restaurant: order.restaurant },
         quantity: orderProduct.quantity,
-      });
+      })
     }
 
-    router.push(`/restaurants/${order.restaurantId}`);
-  };
+    router.push(`/restaurants/${order.restaurantId}`)
+  }
 
   return (
     <Card>
       <CardContent className="space-y-3 p-5">
         <div
           className={`w-fit rounded-full bg-[#EEE] px-2 py-1 text-muted-foreground
-        ${order.status !== "COMPLETED" && "bg-green-500 text-white"}`}
+        ${order.status !== 'COMPLETED' && 'bg-green-500 text-white'}`}
         >
           <span className="block text-xs font-semibold">
             {getOrderStatusLabel(order.status)}
@@ -73,9 +73,7 @@ export const OrderItem = ({ order }: OrderItemProps) => {
               <AvatarImage src={order.restaurant.imageUrl} />
             </Avatar>
 
-            <span className="text-sm font-semibold">
-              {order.restaurant.name}
-            </span>
+            <span className="text-sm font-semibold">{order.restaurant.name}</span>
           </div>
 
           <div className="py-3">
@@ -93,9 +91,7 @@ export const OrderItem = ({ order }: OrderItemProps) => {
           {order.products.map((product) => (
             <div key={product.id} className="mt-2 flex items-center space-x-2">
               <div className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground">
-                <span className="block text-xs text-white">
-                  {product.quantity}
-                </span>
+                <span className="block text-xs text-white">{product.quantity}</span>
               </div>
               <span className="text-xs text-muted-foreground">
                 {product.product.name}
@@ -116,5 +112,5 @@ export const OrderItem = ({ order }: OrderItemProps) => {
         </div>
       </CardContent>
     </Card>
-  );
-};
+  )
+}

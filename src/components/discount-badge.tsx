@@ -1,9 +1,9 @@
-import { Product } from "@prisma/client";
-import { ArrowDownIcon } from "lucide-react";
-import { ComponentProps } from "react";
+import { Product } from '@prisma/client'
+import { ArrowDownIcon } from 'lucide-react'
+import { ComponentProps } from 'react'
 
-interface DiscountBadgeProps extends ComponentProps<"div"> {
-  product: Pick<Product, "discountPercentage">;
+interface DiscountBadgeProps extends ComponentProps<'div'> {
+  product: Pick<Product, 'discountPercentage'>
 }
 
 export const DiscountBagde = ({ product, ...props }: DiscountBadgeProps) => {
@@ -13,9 +13,7 @@ export const DiscountBagde = ({ product, ...props }: DiscountBadgeProps) => {
       {...props}
     >
       <ArrowDownIcon size={12} />
-      <span className="text-xs font-semibold">
-        {product.discountPercentage}%
-      </span>
+      <span className="text-xs font-semibold">{product.discountPercentage}%</span>
     </div>
-  );
-};
+  )
+}

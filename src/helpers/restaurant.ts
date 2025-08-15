@@ -1,10 +1,10 @@
-import { UserFavoriteRestaurant } from "@prisma/client";
+import { UserFavoriteRestaurant } from '@prisma/client'
 
 export const isRestaurantFavorited = (
   restaurantId: string,
-  userFavoriteRestaurants: UserFavoriteRestaurant[],
+  userFavoriteRestaurants: UserFavoriteRestaurant[]
 ) => {
   return userFavoriteRestaurants.some(
-    (favorite) => favorite.restaurantId === restaurantId,
-  );
-};
+    (favorite) => favorite.restaurantId === restaurantId
+  )
+}

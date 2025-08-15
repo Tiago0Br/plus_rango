@@ -1,24 +1,24 @@
-"use server";
+'use server'
 
-import { db } from "@/lib/prisma";
+import { db } from '@/lib/prisma'
 
 export const searchForRestaurants = async (query: string) => {
   const restaurants = await db.restaurant.findMany({
     where: {
       name: {
         contains: query,
-        mode: "insensitive",
+        mode: 'insensitive',
       },
     },
-  });
+  })
 
-  return restaurants;
-};
+  return restaurants
+}
 
 export const searchUserFavoriteRestaurants = async (userId?: string) => {
-  if (!userId) return [];
+  if (!userId) return []
 
   return db.userFavoriteRestaurant.findMany({
     where: { userId },
-  });
-};
+  })
+}

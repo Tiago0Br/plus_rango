@@ -1,4 +1,4 @@
-import Image, { ImageProps } from "next/image";
+import Image, { ImageProps } from 'next/image'
 
 export const PromoBanner = (props: ImageProps) => {
   return (
@@ -11,5 +11,5 @@ export const PromoBanner = (props: ImageProps) => {
       {...props}
       alt="Banner promocional"
     />
-  );
-};
+  )
+}

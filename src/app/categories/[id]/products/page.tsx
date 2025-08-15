@@ -1,12 +1,12 @@
-import { Header } from "@/components/header";
-import { ProductItem } from "@/components/product-item";
-import { db } from "@/lib/prisma";
-import { notFound } from "next/navigation";
+import { Header } from '@/components/header'
+import { ProductItem } from '@/components/product-item'
+import { db } from '@/lib/prisma'
+import { notFound } from 'next/navigation'
 
 interface CategoriesPageProps {
   params: {
-    id: string;
-  };
+    id: string
+  }
 }
 
 const CategoryPage = async ({ params: { id } }: CategoriesPageProps) => {
@@ -25,10 +25,10 @@ const CategoryPage = async ({ params: { id } }: CategoriesPageProps) => {
         },
       },
     },
-  });
+  })
 
   if (!category) {
-    return notFound();
+    return notFound()
   }
 
   return (
@@ -39,16 +39,12 @@ const CategoryPage = async ({ params: { id } }: CategoriesPageProps) => {
 
         <div className="grid grid-cols-2 gap-6">
           {category.products.map((product) => (
-            <ProductItem
-              product={product}
-              key={product.id}
-              className="min-w-full"
-            />
+            <ProductItem product={product} key={product.id} className="min-w-full" />
           ))}
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default CategoryPage;
+export default CategoryPage

@@ -1,8 +1,8 @@
-import { db } from "../lib/prisma";
-import { CategoryItem } from "./category-item";
+import { db } from '../lib/prisma'
+import { CategoryItem } from './category-item'
 
 export const CategoryList = async () => {
-  const categories = await db.category.findMany({});
+  const categories = await db.category.findMany({})
 
   return (
     <div className="grid grid-cols-2 gap-3">
@@ -10,5 +10,5 @@ export const CategoryList = async () => {
         <CategoryItem key={category.id} category={category} />
       ))}
     </div>
-  );
-};
+  )
+}
