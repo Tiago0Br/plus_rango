@@ -4,12 +4,13 @@ import { db } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 
 interface CategoriesPageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
-const CategoryPage = async ({ params: { id } }: CategoriesPageProps) => {
+const CategoryPage = async ({ params }: CategoriesPageProps) => {
+  const { id } = await params
   const category = await db.category.findUnique({
     where: {
       id,

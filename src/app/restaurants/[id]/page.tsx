@@ -12,12 +12,13 @@ import { authOptions } from '@/lib/auth'
 import { isRestaurantFavorited } from '@/helpers/restaurant'
 
 interface RestaurantPageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
-const RestaurantPage = async ({ params: { id } }: RestaurantPageProps) => {
+const RestaurantPage = async ({ params }: RestaurantPageProps) => {
+  const { id } = await params
   const session = await getServerSession(authOptions)
 
   const restaurant = await db.restaurant.findUnique({

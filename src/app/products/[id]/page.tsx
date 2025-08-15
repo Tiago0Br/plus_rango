@@ -4,12 +4,13 @@ import { ProductImage } from '@/components/products/product-image'
 import { ProductDetails } from '@/components/products/product-details'
 
 interface ProductPageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
-const ProductPage = async ({ params: { id } }: ProductPageProps) => {
+const ProductPage = async ({ params }: ProductPageProps) => {
+  const { id } = await params
   const product = await db.product.findUnique({
     where: {
       id,
